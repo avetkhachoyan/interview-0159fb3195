@@ -1,0 +1,27 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sampleapp
+spec:
+  selector:
+    matchLabels:
+      app: sampleapp
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: sampleapp
+    spec:
+      containers:
+      - image: gbolo/sample-app:1.2
+        name:  sampleapp
+        env:
+        - name: APP_SERVER_BIND_PORT
+          value: "60061"
+        - name: APP_DATABASE_DSN
+          value: "sample:password@tcp(10.204.9.207:3306)/sample"
+        ports:
+          - containerPort: 60061
+            name: sampleapp

@@ -1,0 +1,77 @@
+#14/Feb/2022#
+#Avet Khachoyan#
+#interview-0159fb3195 for SK#
+
+export KUBECONFIG=~/kubeconfig_interview-0159fb3195.yml
+kubectl config set-context --current --namespace=interview-0159fb3195
+kubectl get deploy
+kubectl get pod
+kubectl get svc
+kubectl get ing
+
+kubectl apply -f sample-mysql.yaml --namespace=interview-0159fb3195 --dry-run=client
+kubectl apply -f sample-mysql.yaml --namespace=interview-0159fb3195
+kubectl get pod
+kubectl get svc
+
+kubectl run -it --rm --image=mysql:5.6 --restart=Never mysql-client -- mysql -h mysql -ppassword
+##mysql interface
+CREATE DATABASE sample DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+CREATE USER 'sample'@'%' IDENTIFIED BY 'password';
+GRANT ALL ON *.* TO 'sample'@'%';
+FLUSH PRIVILEGES;
+SHOW DATABASES;
+SHOW GRANTS FOR 'sample'@'%';
+EXIT;
+
+kubectl describe deploy mysql
+
+kubectl apply -f sample-app.yaml --namespace=interview-0159fb3195 --dry-run=client
+kubectl apply -f sample-app.yaml --namespace=interview-0159fb3195
+kubectl get deploy
+kubectl get pod
+
+kubectl apply -f sample-app-service.yaml --namespace=interview-0159fb3195 --dry-run=client
+kubectl apply -f sample-app-service.yaml --namespace=interview-0159fb3195
+kubectl get svc
+
+kubectl apply -f sample-ingress.yaml --namespace=interview-0159fb3195 --dry-run=client
+kubectl apply -f sample-ingress.yaml --namespace=interview-0159fb3195
+kubectl get ing
+kubectl describe ing
+
+## Script execution
+python sample-api.py
+
+## Response
+#Response headers
+ content-length: 247 
+ content-type: application/json 
+ date: Mon, 14 Feb 2022 13:52:17 GMT 
+#Response body
+[
+  {
+    "id": "2442",
+    "name": "google",
+    "url": "https://google.com"
+  },
+  {
+    "id": "5533",
+    "name": "reddit",
+    "url": "https://reddit.com"
+  },
+  {
+    "id": "9812",
+    "name": "twitter",
+    "url": "https://twiiter.com"
+  }
+]
+
+##Cleanup
+kubectl delete ing interview-0159fb3195
+kubectl delete svc sampleapp
+kubectl delete pod sampleapp-6d87b6465f-9rrmr
+kubectl delete deploy sampleapp
+kubectl delete svc mysql
+kubectl delete pod mysql-59588fd84c-rvdnj
+kubectl delete deploy mysql

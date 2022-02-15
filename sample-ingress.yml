@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: interview-0159fb3195
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+spec:
+  defaultBackend:
+    service:
+      name: sampleapp
+      port:
+        number: 80
+  tls:
+  - hosts:
+      - "interview-0159fb3195.interview.vme.dev"
+  rules:
+    - host: "interview-0159fb3195.interview.vme.dev"
+    - http:
+        paths:
+        - path: "/"
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: sampleapp
+              port:
+                number: 80
